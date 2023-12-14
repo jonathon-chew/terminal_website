@@ -1,0 +1,27 @@
+body{
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-size: xx-large;
+    background-color: black;
+    color: green;
+}
+
+#username{
+    float:left;
+}
+
+input{
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-size: xx-large;
+    background-color: black;
+    color: green;
+    border-top-style: hidden;
+    border-right-style: hidden;
+    border-left-style: hidden;
+    border-bottom-style: hidden;
+    outline: none;
+    /* caret-color: transparent; */
+}
+
+.no-outline:focus {
+    outline: none;
+  }
