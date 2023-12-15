@@ -29,6 +29,13 @@ function resizeInput() {
   this.style.width = this.value.length + "ch";
 }
 
+input.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+      addToDom()
+    }
+});
+
+
 //Get the input, comapre from a list on inputs and output to the DOM
 function runCommand(){
     let getInputText = document.querySelector('#input').value
@@ -39,16 +46,29 @@ function runCommand(){
     commands = {
         'home' : 'You are home',
         'whoami' : 'Guest',
-        //'help': getCommands()
+        'test': ['this is a', ' test']
     }
 
+    console.log(typeof(commands[getInputText]))
+
     if (commands[getInputText] != undefined){
-        commandText = commands[getInputText]
+        if (typeof(commands[getInputText]) === 'string') {
+            commandText = commands[getInputText]
+        }
+        else if (typeof(commands[getInputText]) === 'object') {
+            for (eachItem = 0; eachItem < commands[getInputText].length; eachItem ++){
+                if (eachItem > 0){
+                    commandText += ", "
+                }
+                commandText += commands[getInputText][eachItem]
+             }
+        }
     }
     else{
         commandText = "I do not recognise the command. If you're unsure of the commands please type help"
     }
-        
+
+    console.log(commandText)
     return commandText
 }
 
