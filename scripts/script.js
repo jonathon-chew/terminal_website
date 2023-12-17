@@ -47,13 +47,18 @@ function runCommand(){
         'home' : 'You are home',
         'whoami' : 'Guest',
         'test': ['this is a', ' test'],
-        'projects':['Terminal Website', 'Internal Wikipedia', "Custom home page of internal apps"]
-    }
+        'projects':['Terminal Website', 'Internal Wikipedia', "Custom home page of internal apps"],
+        }
 
     if(getInputText.includes(' ')){
         let pieces = getInputText.split(' ');
         getInputText = commands[pieces[0]]
     };
+
+    if (getInputText == 'clear'){
+        clear()
+        return
+    }
 
     //console.log(typeof(commands[getInputText]))
 
@@ -93,11 +98,19 @@ function addToDom(){
     const newText = runCommand()
 
     //result
-    outputArea.append(newText)
+    if(newText){
+        outputArea.append(newText)
 
     //new line
     outputArea.append(breakerSection)
+    }
 
     //reset the input
     inputArea.value = ''
+}
+
+function clear(){
+   const outputArea = document.querySelector("#output")
+
+   outputArea.innerHTML= ''
 }
