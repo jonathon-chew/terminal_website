@@ -19,6 +19,7 @@ input{
     border-left-style: hidden;
     border-bottom-style: hidden;
     outline: none;
+    margin-left: 20px;
     /* caret-color: transparent; */
 }
 

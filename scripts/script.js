@@ -43,13 +43,19 @@ function runCommand(){
 
     getInputText = getInputText.trim()
 
-    commands = {
+        commands = {
         'home' : 'You are home',
         'whoami' : 'Guest',
-        'test': ['this is a', ' test']
+        'test': ['this is a', ' test'],
+        'projects':['Terminal Website', 'Internal Wikipedia', "Custom home page of internal apps"]
     }
 
-    console.log(typeof(commands[getInputText]))
+    if(getInputText.includes(' ')){
+        let pieces = getInputText.split(' ');
+        getInputText = commands[pieces[0]]
+    };
+
+    //console.log(typeof(commands[getInputText]))
 
     if (commands[getInputText] != undefined){
         if (typeof(commands[getInputText]) === 'string') {
@@ -68,7 +74,6 @@ function runCommand(){
         commandText = "I do not recognise the command. If you're unsure of the commands please type help"
     }
 
-    console.log(commandText)
     return commandText
 }
 
@@ -94,5 +99,5 @@ function addToDom(){
     outputArea.append(breakerSection)
 
     //reset the input
-    inputArea.value = ' '
+    inputArea.value = ''
 }
