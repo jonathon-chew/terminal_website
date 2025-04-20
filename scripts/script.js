@@ -39,15 +39,14 @@ const commands = {
   'home' : 'You are home',
   'whoami' : 'Guest',
   'test': ['this is a', ' test'],
-  'projects':['Terminal Website', 'Internal Wikipedia', "Custom home page of internal apps"],
+  'projects':['Internal Wikipedia', "Custom home page of internal apps"],
+  'help':'',
+  'profile':[]
 }
-
-let helpKeys = Object.keys(commands).join(", ")
-commands.help = "Avaliable commands: " + helpKeys 
 
 const username = "jonathon-chew";
 
-const projects = fetch(`https://api.github.com/users/${username}/repos`)
+fetch(`https://api.github.com/users/${username}/repos`)
   .then(response => response.json())
   .then(repos => {
   repos.forEach(repo => {
@@ -59,10 +58,14 @@ const projects = fetch(`https://api.github.com/users/${username}/repos`)
   .catch(error => console.error("Error fetching repos:", error));
 
 
-const githubProfile = fetch(`https://api.github.com/users/${username}`)
+fetch(`https://api.github.com/users/${username}`)
   .then(response => response.json())
   .then(profile => {
-  commands.profile = "Profile Info:" + "<br>Name:" + profile.name + "<br>Bio:" + profile.bio + + "<br>Public Repos:" + profile.public_repos + + "<br>URL:" + profile.html_url
+  commands.profile.push("Profile Info:")
+  commands.profile.push("Name:" + profile.name)
+  commands.profile.push("Bio:" + profile.bio)
+  commands.profile.push("Public Repos:" + profile.public_repos)
+  commands.profile.push("URL:" + profile.html_url)
   });
 
 //Get the input, comapre from a list on inputs and output to the DOM
@@ -82,7 +85,7 @@ function runCommand(){
     return
   }
 
-  //console.log(typeof(commands[getInputText]))
+  // console.log(typeof(commands[getInputText]))
 
   if (commands[getInputText] != undefined){
     if (typeof(commands[getInputText]) === 'string') {
@@ -136,3 +139,6 @@ function clear(){
 
    outputArea.innerHTML= ''
 }
+
+let helpKeys = Object.keys(commands).join(", ")
+commands.help = "Avaliable commands: " + helpKeys 
