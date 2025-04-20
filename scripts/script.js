@@ -3,18 +3,18 @@ window.onload = AddElements
 //Set the date for the terminal
 let currentDate = time();
 function time() {
-    const todaysDate = new Date();
+  const todaysDate = new Date();
 
-    let day = todaysDate.getDate();
-    let month = todaysDate.getMonth() + 1;
-    let year = todaysDate.getFullYear();
+  let day = todaysDate.getDate();
+  let month = todaysDate.getMonth() + 1;
+  let year = todaysDate.getFullYear();
 
-    let currentDate = `${day}-${month}-${year}`;
-    return currentDate;
+  let currentDate = `${day}-${month}-${year}`;
+  return currentDate;
 }
 
 function AddElements(){
-    document.getElementById("Date").innerHTML = "Last login: " + currentDate + " on ttys001";
+  document.getElementById("Date").innerHTML = "Last login: " + currentDate + " on ttys001";
 };
 
 //Auto select the input box upon loading
@@ -30,83 +30,105 @@ function resizeInput() {
 }
 
 input.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-      addToDom()
-    }
+  if (e.key === 'Enter') {
+    addToDom()
+  }
 });
 
+const commands = {
+  'home' : 'You are home',
+  'whoami' : 'Guest',
+  'test': ['this is a', ' test'],
+  'projects':['Terminal Website', 'Internal Wikipedia', "Custom home page of internal apps"],
+}
+
+let helpKeys = Object.keys(commands).join(", ")
+commands.help = "Avaliable commands: " + helpKeys 
+
+const username = "jonathon-chew";
+
+const projects = fetch(`https://api.github.com/users/${username}/repos`)
+  .then(response => response.json())
+  .then(repos => {
+  repos.forEach(repo => {
+    if (repo.name != 'jonathon-chew'){
+      commands.projects.push(repo.name)
+    }
+  });
+  })
+  .catch(error => console.error("Error fetching repos:", error));
+
+
+const githubProfile = fetch(`https://api.github.com/users/${username}`)
+  .then(response => response.json())
+  .then(profile => {
+  commands.profile = "Profile Info:" + "<br>Name:" + profile.name + "<br>Bio:" + profile.bio + + "<br>Public Repos:" + profile.public_repos + + "<br>URL:" + profile.html_url
+  });
 
 //Get the input, comapre from a list on inputs and output to the DOM
 function runCommand(){
-    let getInputText = document.querySelector('#input').value
-    let commandText = ""
+  let getInputText = document.querySelector('#input').value
+  let commandText = ""
 
-    getInputText = getInputText.trim()
+  getInputText = getInputText.trim()
 
-        commands = {
-        'home' : 'You are home',
-        'whoami' : 'Guest',
-        'test': ['this is a', ' test'],
-        'projects':['Terminal Website', 'Internal Wikipedia', "Custom home page of internal apps"],
-        }
+  if(getInputText.includes(' ')){
+    let pieces = getInputText.split(' ');
+    getInputText = commands[pieces[0]]
+  };
 
-    if(getInputText.includes(' ')){
-        let pieces = getInputText.split(' ');
-        getInputText = commands[pieces[0]]
-    };
+  if (getInputText == 'clear'){
+    clear()
+    return
+  }
 
-    if (getInputText == 'clear'){
-        clear()
-        return
+  //console.log(typeof(commands[getInputText]))
+
+  if (commands[getInputText] != undefined){
+    if (typeof(commands[getInputText]) === 'string') {
+      commandText = commands[getInputText]
     }
-
-    //console.log(typeof(commands[getInputText]))
-
-    if (commands[getInputText] != undefined){
-        if (typeof(commands[getInputText]) === 'string') {
-            commandText = commands[getInputText]
+    else if (typeof(commands[getInputText]) === 'object') {
+      for (var eachItem = 0; eachItem < commands[getInputText].length; eachItem ++){
+        if (eachItem > 0){
+          commandText += ", "
         }
-        else if (typeof(commands[getInputText]) === 'object') {
-            for (eachItem = 0; eachItem < commands[getInputText].length; eachItem ++){
-                if (eachItem > 0){
-                    commandText += ", "
-                }
-                commandText += commands[getInputText][eachItem]
-             }
-        }
+        commandText += commands[getInputText][eachItem]
+       }
     }
-    else{
-        commandText = "I do not recognise the command. If you're unsure of the commands please type help"
-    }
+  }
+  else{
+    commandText = "I do not recognise the command. If you're unsure of the commands please type help"
+  }
 
-    return commandText
+  return commandText
 }
 
 //Add the input to the DOM
 function addToDom(){
-    const outputArea = document.querySelector("#output")
-    const breakerSection = document.createElement('br')
-    const inputArea = document.querySelector('#input')
-    const commandPrompt = "Guest@Jonathon's Profile Page % "
+  const outputArea = document.querySelector("#output")
+  const breakerSection = document.createElement('br')
+  const inputArea = document.querySelector('#input')
+  const commandPrompt = "Guest@Jonathon's Profile Page % "
 
-    //remember and write the command
-    commandTextAndPrompt = commandPrompt + inputArea.value
-    outputArea.append(commandTextAndPrompt)
-    outputArea.append(document.createElement('br'))
-    
-    //run commmand and get innerText
-    const newText = runCommand()
+  //remember and write the command
+  var commandTextAndPrompt = commandPrompt + inputArea.value
+  outputArea.append(commandTextAndPrompt)
+  outputArea.append(document.createElement('br'))
+  
+  //run commmand and get innerText
+  const newText = runCommand()
 
-    //result
-    if(newText){
-        outputArea.append(newText)
+  //result
+  if(newText){
+    outputArea.append(newText)
 
-    //new line
-    outputArea.append(breakerSection)
-    }
+  //new line
+  outputArea.append(breakerSection)
+  }
 
-    //reset the input
-    inputArea.value = ''
+  //reset the input
+  inputArea.value = ''
 }
 
 function clear(){
